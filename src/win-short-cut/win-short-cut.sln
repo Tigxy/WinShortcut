@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32526.322
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "win-short-cut", "win-short-cut.csproj", "{975F8E0A-3386-4573-B8FB-C6414F1C17CA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{975F8E0A-3386-4573-B8FB-C6414F1C17CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{975F8E0A-3386-4573-B8FB-C6414F1C17CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{975F8E0A-3386-4573-B8FB-C6414F1C17CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{975F8E0A-3386-4573-B8FB-C6414F1C17CA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B0793DC7-2821-480C-9D32-61D863628046}
+	EndGlobalSection
+EndGlobal
