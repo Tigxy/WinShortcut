@@ -1,9 +1,9 @@
-﻿<Page x:Class="win_short_cut.ShortcutsPage"
+﻿<Page x:Class="win_short_cut.Pages.ShortcutsPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:win_short_cut"
+      xmlns:local="clr-namespace:win_short_cut" xmlns:Converters="clr-namespace:win_short_cut.Converters"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ShortcutPage">
@@ -12,8 +12,91 @@
             <Setter Property="Background" Value="White"/>
         </Style>
     </d:DesignerProperties.DesignStyle>
+    <Page.Resources>
+        <Converters:WidthConverter x:Key="WidthConverter"/>
+    </Page.Resources>
 
     <Grid>
-        <TextBlock Text="ShortcutsPage"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Shortcuts" Margin="0 10" FontSize="20" FontWeight="Bold"/>
+
+        <ListView x:Name="lv" Grid.Row="1" ItemsSource="{Binding Shortcuts}"
+                   ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="{x:Type ListViewItem}">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                    <Setter Property="Margin" Value="0 2"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.View>
+                <GridView>
+                    <!-- Name column -->
+                    <GridViewColumn Header="Name"
+                                    Width="{Binding ElementName=lv, Path=ActualWidth, Converter={StaticResource WidthConverter}, ConverterParameter=20}">
+                        <GridViewColumn.HeaderContainerStyle>
+                            <Style TargetType="{x:Type GridViewColumnHeader}">
+                                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                                <Setter Property="Padding" Value="5 0"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                            </Style>
+                        </GridViewColumn.HeaderContainerStyle>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel HorizontalAlignment="Left">
+                                    <TextBlock Text="{Binding Name}" Background="LightGray" Padding="4 3" FontFamily="Roboto Mono"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                    
+                    <!-- Description column -->
+                    <GridViewColumn Header="Description" DisplayMemberBinding="{Binding Description}"
+                                    Width="{Binding ElementName=lv, Path=ActualWidth, Converter={StaticResource WidthConverter}, ConverterParameter=55}">
+                        <GridViewColumn.HeaderContainerStyle>
+                            <Style TargetType="{x:Type GridViewColumnHeader}">
+                                <Setter Property="HorizontalContentAlignment" Value="Left" />
+                                <Setter Property="Padding" Value="5 0"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                            </Style>
+                        </GridViewColumn.HeaderContainerStyle>
+                    </GridViewColumn>
+
+                    <!-- Actions column -->
+                    <GridViewColumn Header="Actions"
+                                    Width="{Binding ElementName=lv, Path=ActualWidth, Converter={StaticResource WidthConverter}, ConverterParameter=25}">
+                        <GridViewColumn.HeaderContainerStyle>
+                            <Style TargetType="{x:Type GridViewColumnHeader}">
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                            </Style>
+                        </GridViewColumn.HeaderContainerStyle>
+                        <GridViewColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                    <Button FontSize="16" Grid.Column="2" Padding="4" Margin="3 0" FontFamily="Segoe MDL2 Assets" Click="btnPlay_Click"
+                                            Content="&#xE768;" Background="LightGreen" HorizontalAlignment="Right"/>
+                                    <Button FontSize="16" Grid.Column="3" Padding="4" Margin="3 0" FontFamily="Segoe MDL2 Assets" Click="btnEdit_Click"
+                                            Content="&#xE70F;" Background="Transparent" HorizontalAlignment="Right"/>
+                                    <Button FontSize="16" Grid.Column="4" Padding="4" Margin="3 0" FontFamily="Segoe MDL2 Assets" Click="btnRemove_Click"
+                                            Content="&#xE74D;" Background="PaleVioletRed" HorizontalAlignment="Right"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </GridViewColumn.CellTemplate>
+                    </GridViewColumn>
+                </GridView>
+            </ListView.View>
+        </ListView>
+
+        <Button Grid.Row="2" Width="Auto" Height="Auto" HorizontalAlignment="Center" Content="add new" Padding="10 4" Margin="5" Click="btnAddNew_Click">
+            <Button.Resources>
+                <Style TargetType="Border">
+                    <Setter Property="CornerRadius" Value="8"/>
+                </Style>
+            </Button.Resources>
+        </Button>
     </Grid>
 </Page>

@@ -1,29 +1,58 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using win_short_cut.DataClasses;
 
-namespace win_short_cut {
+namespace win_short_cut.Pages {
     /// <summary>
     /// Interaktionslogik für ShortcutPage.xaml
     /// </summary>
-    public partial class ShortcutPage : Page {
-        public ShortcutPage() {
-            InitializeComponent();
+    public partial class ShortcutPage : Page, ILoadablePage, INotifyPropertyChanged {
+
+        private Shortcut? _shortcut = null;
+
+        public event PropertyChangedEventHandler? PropertyChanged;
+        public void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+        public Shortcut? Shortcut
+        {
+            get => _shortcut;
+            set
+            {
+                _shortcut = value;
+                OnPropertyChanged(nameof(Shortcut));
+                this.DataContext = Shortcut;
+            }
         }
 
-        private void btn_back_Click(object sender, RoutedEventArgs e) {
+        public ShortcutPage() {
+            InitializeComponent();
+            this.DataContext = Shortcut;
+        }
 
+        public void LoadPage()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void LoadPage(params object[] parameters)
+        {
+            if (parameters.Length > 0 && parameters[0] is Shortcut shortcut)
+                Shortcut = shortcut;
+        }
+
+        private void btnBack_Click(object sender, RoutedEventArgs e)
+        {
+            PageManager.Instance.SwitchToPage("overview");
+        }
+
+        private void btnStore_Click(object sender, RoutedEventArgs e)
+        {
+            if (Shortcut != null)
+                PageManager.Instance.SwitchToPage("overview", Shortcut);
+            else
+                PageManager.Instance.SwitchToPage("overview");
         }
     }
 }

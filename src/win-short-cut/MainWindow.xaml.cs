@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using win_short_cut.DataClasses;
+using win_short_cut.Pages;
 using win_short_cut.Utils;
 
 namespace win_short_cut
@@ -19,7 +20,7 @@ namespace win_short_cut
         public static readonly string ShortcutDataFile = System.IO.Path.Combine(ApplicationDir, "shortcuts.xaml");
         public static readonly string SettingsFile = System.IO.Path.Combine(ApplicationDir, "settings.json");
 
-        public ObservableCollection<Shortcut> Shortcuts = new();
+        public Shortcuts Shortcuts = new();
 
         public MainWindow()
         {
@@ -37,7 +38,10 @@ namespace win_short_cut
             LoadShortcuts();
             GenerateShortcutFiles();
 
-            fr_main.Content = new ShortcutsPage();
+            PageManager.Instance.RegisterPage("overview", new ShortcutsPage(Shortcuts));
+            PageManager.Instance.RegisterPage("edit", new ShortcutPage());
+
+            PageManager.Instance.SwitchToPage("overview");
         }
 
         private void GenerateShortcutFiles()

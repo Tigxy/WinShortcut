@@ -4,19 +4,20 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:win_short_cut"
+        xmlns:pm="clr-namespace:win_short_cut.Pages"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
-        Closing="Window_Closing" >
+        Title="MainWindow" Height="450" Width="800" FontSize="16"
+        MinWidth="600"
+        MinHeight="250"
+        Closing="Window_Closing" >    
+    <!--<Window.Resources>
+        <ObjectDataProvider x:Key=""/>
+    </Window.Resources>-->
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <!--<StackPanel Grid.Row="0" Margin="0 5" Orientation="Horizontal" HorizontalAlignment="Center">
-            <Button x:Name="btn_settings" Margin="5,0" Padding="10,5" Click="btn_settings_Click" >Settings</Button>
-            <Button x:Name="btn_shortcuts" Margin="5,0" Padding="10,5" Click="btn_shortcuts_Click" >Shortcuts</Button>
-        </StackPanel>-->
-        <Frame Grid.Row="1" x:Name="fr_main" NavigationUIVisibility="Hidden"
-               Padding="10"/>
+        <Frame Grid.Row="1" x:Name="fr_main" NavigationUIVisibility="Hidden" Padding="10" Content="{Binding Source={x:Static pm:PageManager.Instance}, Path=CurrentPage}"/>
     </Grid>
 </Window>

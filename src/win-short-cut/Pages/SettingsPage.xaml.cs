@@ -1,28 +1,26 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
-namespace win_short_cut
+namespace win_short_cut.Pages
 {
     /// <summary>
     /// Interaktionslogik für SettingsPage.xaml
     /// </summary>
-    public partial class SettingsPage : Page
+    public partial class SettingsPage : Page, ILoadablePage
     {
         public SettingsPage()
         {
             InitializeComponent();
+        }
+
+        public void LoadPage()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void LoadPage(params object[] parameters)
+        {
+            throw new NotImplementedException();
         }
     }
 }
