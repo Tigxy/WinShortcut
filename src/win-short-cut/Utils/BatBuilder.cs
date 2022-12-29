@@ -47,7 +47,7 @@ namespace win_short_cut.Utils
         {
             // prevent echo errors
             string s = text.Replace('"', '\'');
-            StringBuilder.AppendLine($"echo {s}");
+            StringBuilder.AppendLine($"@echo {s}");
             return this;
         }
 

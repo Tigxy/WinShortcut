@@ -6,8 +6,11 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace win_short_cut.DataClasses {
-    public class Command
-    {
+    [Serializable]
+    public class Command {
+        [XmlIgnore]
+        internal Guid Id = System.Guid.NewGuid();
+
         [XmlAttribute]
         public bool PrintCommand { get; set; } = true;
 

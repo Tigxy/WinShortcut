@@ -6,18 +6,15 @@
         xmlns:local="clr-namespace:win_short_cut"
         xmlns:pm="clr-namespace:win_short_cut.Pages"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" FontSize="16"
+        Title="Windows Shortcuts" Height="450" Width="800" FontSize="16"
         MinWidth="600"
         MinHeight="250"
-        Closing="Window_Closing" >    
-    <!--<Window.Resources>
-        <ObjectDataProvider x:Key=""/>
-    </Window.Resources>-->
+        Closing="Window_Closing" >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Frame Grid.Row="1" x:Name="fr_main" NavigationUIVisibility="Hidden" Padding="10" Content="{Binding Source={x:Static pm:PageManager.Instance}, Path=CurrentPage}"/>
+        <Frame Grid.Row="1" x:Name="fr_main" NavigationUIVisibility="Hidden" Padding="10 5" Content="{Binding Source={x:Static pm:PageManager.Instance}, Path=CurrentPage}"/>
     </Grid>
 </Window>

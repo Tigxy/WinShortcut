@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace win_short_cut.DataClasses {
+    [Serializable]
     public class CommandContainer
     {
         [XmlAttribute]
@@ -15,6 +17,6 @@ namespace win_short_cut.DataClasses {
         public string Description { get; set; } = "";
 
         [XmlElement(nameof(Command))]
-        public Command[] Commands { get; set; } = Array.Empty<Command>();
+        public ObservableCollection<Command> Commands { get; set; } = new();
     }
 }

@@ -1,0 +1,21 @@
+﻿<Window x:Class="win_short_cut.PopUps.MessageBox"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:win_short_cut.PopUps"
+        mc:Ignorable="d"
+        Title="MessageBox" Height="200" Width="500"
+        SizeToContent="Height"
+        FontSize="14">
+    <Grid Margin="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Grid.Row="0" Text="{Binding Message}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5 10"/>
+        <Button Grid.Row="1" Content="OK" HorizontalAlignment="Center" Margin="10" Padding="20 5" 
+                Click="Button_Click"/>
+    </Grid>
+</Window>
