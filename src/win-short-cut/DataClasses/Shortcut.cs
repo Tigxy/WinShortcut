@@ -15,9 +15,6 @@ namespace win_short_cut.DataClasses {
         [XmlAttribute]
         public string Name { get; set; } = "";
 
-        //[XmlAttribute]
-        //public bool ExecuteSequentially { get; set; } = true;
-
         [XmlAttribute]
         public string Description { get; set; } = "";
 

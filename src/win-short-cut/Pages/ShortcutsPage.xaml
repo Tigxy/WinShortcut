@@ -25,6 +25,12 @@
 
         <TextBlock Text="Shortcuts" Margin="0 0 0 10" FontSize="20" FontWeight="Bold"/>
 
+        <Button Grid.Row="0" FontFamily="Segoe MDL2 Assets" Content="&#xE72C;"
+                FontSize="20" Padding="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
+                HorizontalAlignment="Right" VerticalAlignment="Center" Background="Transparent" Click="btnRefreshAll_Click"
+                ToolTip="Recreate all commands"
+                />
+
         <ListView x:Name="lv" Grid.Row="1" ItemsSource="{Binding Source={x:Static local:Globals.Shortcuts}}"
                    ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="False">
             <ListView.ItemContainerStyle>
@@ -78,11 +84,13 @@
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
                                     <Button FontSize="16" Grid.Column="2" Padding="4" Margin="3 0" FontFamily="Segoe MDL2 Assets" Click="btnPlay_Click"
-                                            Content="&#xE768;" Background="LightGreen" HorizontalAlignment="Right"/>
+                                            Content="&#xE768;" Background="LightGreen" HorizontalAlignment="Right" ToolTip="execute command"/>
                                     <Button FontSize="16" Grid.Column="3" Padding="4" Margin="3 0" FontFamily="Segoe MDL2 Assets" Click="btnEdit_Click"
-                                            Content="&#xE70F;" Background="Transparent" HorizontalAlignment="Right"/>
+                                            Content="&#xE70F;" Background="Transparent" HorizontalAlignment="Right" ToolTip="edit command"/>
+                                    <Button FontSize="16" Grid.Column="3" Padding="4" Margin="3 0" FontFamily="Segoe MDL2 Assets" Click="btnDuplicate_Click"
+                                            Content="&#xE8C8;" Background="Transparent" HorizontalAlignment="Right" ToolTip="duplicate command"/>
                                     <Button FontSize="16" Grid.Column="4" Padding="4" Margin="3 0" FontFamily="Segoe MDL2 Assets" Click="btnRemove_Click"
-                                            Content="&#xE74D;" Background="PaleVioletRed" HorizontalAlignment="Right"/>
+                                            Content="&#xE74D;" Background="PaleVioletRed" HorizontalAlignment="Right" ToolTip="delete command"/>
                                 </StackPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>

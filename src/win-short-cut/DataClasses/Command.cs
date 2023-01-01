@@ -12,10 +12,10 @@ namespace win_short_cut.DataClasses {
         internal Guid Id = System.Guid.NewGuid();
 
         [XmlAttribute]
-        public bool PrintCommand { get; set; } = true;
+        public bool PrintCommand { get; set; } = false;
 
         [XmlAttribute]
-        public bool PrintDescription { get; set; } = true;
+        public bool PrintDescription { get; set; } = false;
 
         [XmlAttribute]
         public string Description { get; set; } = "";

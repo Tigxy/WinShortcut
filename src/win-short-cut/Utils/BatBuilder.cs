@@ -4,30 +4,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace win_short_cut.Utils
-{
-    internal class BatBuilder
-    {
+namespace win_short_cut.Utils {
+    internal class BatBuilder {
         private bool isCommandOutputOn = true;
         private StringBuilder StringBuilder = new();
 
-        public BatBuilder TurnOffCommandOutput()
-        {
+        public BatBuilder TurnOffCommandOutput() {
             // prevent adding unnecessary commands
-            if (this.isCommandOutputOn)
-            {
+            if (this.isCommandOutputOn) {
                 StringBuilder.AppendLine("@echo off");
                 isCommandOutputOn = true;
             }
-                
+
             return this;
         }
 
-        public BatBuilder TurnOnCommandOutput()
-        {
+        public BatBuilder TurnOnCommandOutput() {
             // prevent adding unnecessary commands
-            if (!this.isCommandOutputOn)
-            {
+            if (!this.isCommandOutputOn) {
                 StringBuilder.AppendLine("@echo on");
                 isCommandOutputOn = false;
             }
@@ -35,41 +29,37 @@ namespace win_short_cut.Utils
             return this;
         }
 
-        public BatBuilder Comment(string comment)
-        {
+        public BatBuilder Comment(string comment) {
             // ensure that all lines of a comment are commented out
             string[] lines = comment.Split('\n');
             lines.ForEach(x => StringBuilder.AppendLine(":: " + x));
             return this;
         }
 
-        public BatBuilder Echo(string text)
-        {
+        public BatBuilder Echo(string text) => Echo(text, silent: true);
+
+        public BatBuilder Echo(string text, bool silent) {
             // prevent echo errors
             string s = text.Replace('"', '\'');
-            StringBuilder.AppendLine($"@echo {s}");
+            StringBuilder.AppendLine((silent ? "@" : "") + $"echo {s}");
             return this;
         }
 
-        public BatBuilder Execute(string command) => Execute(command, false);
+        public BatBuilder Execute(string command) => Execute(command, silent: false);
 
-        public BatBuilder Execute(string command, bool silent)
-        {
+        public BatBuilder Execute(string command, bool silent) {
             StringBuilder.AppendLine((silent ? "@" : "") + command);
             return this;
         }
 
-        public BatBuilder Clear()
-        {
+        public BatBuilder Clear() {
             StringBuilder.Clear();
             isCommandOutputOn = true;
             return this;
         }
 
-        public void ToFile(string path)
-        {
-            using (var sw = new System.IO.StreamWriter(path))
-            {
+        public void ToFile(string path) {
+            using (var sw = new System.IO.StreamWriter(path)) {
                 sw.Write(this.ToString());
             }
         }

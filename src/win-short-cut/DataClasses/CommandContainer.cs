@@ -14,7 +14,13 @@ namespace win_short_cut.DataClasses {
         public bool KeepOpenOnceDone { get; set; }
 
         [XmlAttribute]
+        public bool ConcatenateCommands { get; set; }
+
+        [XmlAttribute]
         public string Description { get; set; } = "";
+
+        [XmlAttribute]
+        public bool ShowDescriptionFields { get; set; } = false;
 
         [XmlElement(nameof(Command))]
         public ObservableCollection<Command> Commands { get; set; } = new();

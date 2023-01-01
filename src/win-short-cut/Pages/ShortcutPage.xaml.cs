@@ -13,32 +13,58 @@ namespace win_short_cut.Pages {
     /// </summary>
     public partial class ShortcutPage : Page, ILoadablePage, INotifyPropertyChanged {
 
-        private Shortcut _shortcut = new Shortcut();
+        private Shortcut _shortcut = new();
 
         public event PropertyChangedEventHandler? PropertyChanged;
         public void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
+        private string _pageTitle = "";
+        public string PageTitle {
+            get => _pageTitle;
+            set {
+                _pageTitle = value;
+                OnPropertyChanged(nameof(PageTitle));
+            }
+        }
+
+        private bool _isNewShortcut = true;
+        public bool IsNewShortcut {
+            get => _isNewShortcut;
+            set {
+                _isNewShortcut = value;
+                PageTitle = _isNewShortcut ? "new shortcut" : "edit shortcut";
+            }
+        }
         public Shortcut Shortcut {
             get => _shortcut;
             set {
                 _shortcut = value;
                 OnPropertyChanged(nameof(Shortcut));
-                this.DataContext = Shortcut;
             }
         }
 
         public ShortcutPage() {
             InitializeComponent();
-            this.DataContext = Shortcut;
+            this.DataContext = this;
         }
 
         public void LoadPage() {
             Shortcut = new();
+
+            CommandContainer container = new();
+            container.Commands.Add(new());
+
+            Shortcut.Containers.Add(container);
+            
+            IsNewShortcut = true;
+            tb_ShortcutName.Focus();
         }
 
         public void LoadPage(params object[] parameters) {
-            if (parameters.Length > 0 && parameters[0] is Shortcut shortcut)
+            if (parameters.Length > 0 && parameters[0] is Shortcut shortcut) {
                 Shortcut = shortcut;
+                IsNewShortcut = false;
+            }
             else
                 LoadPage();
         }
@@ -48,26 +74,10 @@ namespace win_short_cut.Pages {
         }
 
         private void btnStore_Click(object sender, RoutedEventArgs e) {
-            if (!CheckValidity())
+            if (!Utils.ShortcutBuilder.ValidateShortcut(Shortcut, showWarningToUser:true))
                 return;
             StoreShortcut();
             PageManager.Instance.SwitchToPage("overview");
-        }
-
-        private bool CheckValidity() {
-            if (String.IsNullOrWhiteSpace(Shortcut.Name)) {
-                var mb = new PopUps.MessageBox(App.Current.MainWindow, $"Shortcut name must not be left empty!", "Save shortcut");
-                mb.ShowDialog();
-                return false;
-            }
-
-            if (Globals.Shortcuts.Where(x => x.Name == Shortcut.Name && x.Id != Shortcut.Id).Any()) {
-                var mb = new PopUps.MessageBox(App.Current.MainWindow, $"Shortcut with identical name already exists!", "Save shortcut");
-                mb.ShowDialog();
-                return false;
-            }
-
-            return true;
         }
 
         private void StoreShortcut() {

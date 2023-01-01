@@ -18,16 +18,35 @@ namespace win_short_cut.Pages {
         }
 
         private void btnPlay_Click(object sender, RoutedEventArgs e) {
-            throw new NotImplementedException();
             if (sender is Button btn)
                 if (btn.DataContext is Shortcut shortcut)
-                    System.Diagnostics.Debug.WriteLine(shortcut.Name);
+                    Utils.ShortcutBuilder.ExecuteShortcut(shortcut);
         }
 
         private void btnEdit_Click(object sender, RoutedEventArgs e) {
             if (sender is Button btn)
                 if (btn.DataContext is Shortcut shortcut)
                     PageManager.Instance.SwitchToPage("edit", shortcut.DeepClone());
+        }
+
+        private void btnDuplicate_Click(object sender, RoutedEventArgs e) {
+            if (sender is Button btn)
+                if (btn.DataContext is Shortcut shortcut) {
+                    Shortcut newShortcut = shortcut.DeepClone();
+                    newShortcut.Id = new Guid();
+
+                    int i = 1;
+                    string baseNameSuggestion = newShortcut.Name + "_copy";
+                    string nameSuggestion = baseNameSuggestion;
+                    while (Globals.Shortcuts.Where(s => s.Name == nameSuggestion).Any()) {
+                        nameSuggestion = baseNameSuggestion + $"_{i}";
+                        i += 1;
+                    }
+
+                    newShortcut.Name = nameSuggestion;
+                    Globals.Shortcuts.Add(newShortcut);
+                    Utils.ShortcutBuilder.ShortcutToFile(newShortcut);
+                }
         }
 
         private void btnRemove_Click(object sender, RoutedEventArgs e) {
@@ -50,8 +69,11 @@ namespace win_short_cut.Pages {
         }
 
         private void btnAddNew_Click(object sender, RoutedEventArgs e) {
-            Shortcut newShortcut = new();
-            PageManager.Instance.SwitchToPage("edit", newShortcut);
+            PageManager.Instance.SwitchToPage("edit");
+        }
+
+        private void btnRefreshAll_Click(object sender, RoutedEventArgs e) {
+            Utils.ShortcutBuilder.RecreateShortcutFiles();
         }
 
         public void LoadPage() { }

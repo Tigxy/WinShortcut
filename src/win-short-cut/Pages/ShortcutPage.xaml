@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:win_short_cut"
+      xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="ShortcutPage">
@@ -13,6 +14,7 @@
         </Style>
     </d:DesignerProperties.DesignStyle>
     <Page.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <Style TargetType="{x:Type ToggleButton}" x:Key="ToggleButton_VisibilityTemplate">
             <Setter Property="Template">
                 <Setter.Value>
@@ -53,14 +55,14 @@
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" FontFamily="Segoe MDL2 Assets" Content="&#xE76B;"
                 FontSize="20" Padding="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                HorizontalAlignment="Left" Background="Transparent" Click="btnBack_Click"
+                HorizontalAlignment="Left" VerticalAlignment="Center" Background="Transparent" Click="btnBack_Click"
                 />
 
-            <TextBlock Grid.Column="1" Text="edit shortcut" Margin="5" FontSize="20" FontWeight="Bold"/>
+            <TextBlock Grid.Column="1" Text="{Binding PageTitle}" Margin="5" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
 
             <Button Grid.Column="2" FontFamily="Segoe MDL2 Assets" Content="&#xE74E;"
                 FontSize="20" Padding="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                HorizontalAlignment="Left" Background="Transparent" Click="btnStore_Click"
+                HorizontalAlignment="Left" VerticalAlignment="Center" Background="Transparent" Click="btnStore_Click"
                 />
         </Grid>
 
@@ -75,16 +77,16 @@
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Row="0" Grid.Column="0" Text="Name" Margin="0 5 5 5" VerticalAlignment="Center"/>
-            <TextBox Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" MinWidth="100" Margin="0 5" Padding="2"
-                     Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+            <TextBox x:Name="tb_ShortcutName" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Left" MinWidth="100" Margin="0 5" Padding="2"
+                     Text="{Binding Shortcut.Name, UpdateSourceTrigger=PropertyChanged}"/>
 
             <TextBlock Grid.Row="1" Grid.Column="0" Text="Description" Margin="0 5 5 5" VerticalAlignment="Center"/>
-            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" Margin="0 5" Padding="2"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Shortcut.Description, UpdateSourceTrigger=PropertyChanged}" Margin="0 5" Padding="2"/>
         </Grid>
 
         <TextBlock Grid.Row="2" Text="command blocks" Margin="5" FontSize="16" FontWeight="SemiBold"/>
 
-        <ListView x:Name="lv_Blocks" Grid.Row="3" ItemsSource="{Binding Containers}" ScrollViewer.CanContentScroll="False">
+        <ListView x:Name="lv_Blocks" Grid.Row="3" ItemsSource="{Binding Shortcut.Containers}" ScrollViewer.CanContentScroll="False">
             <ListView.ItemContainerStyle>
                 <Style TargetType="{x:Type ListViewItem}">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -105,32 +107,64 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto"/>
                                     <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="Auto"/>
                                     <ColumnDefinition Width="*"/>
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Column="0" Text="Container description" VerticalAlignment="Center" Margin="0 0 5 0"/>
-                                <TextBox Grid.Column="1" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" Padding="3" TextWrapping="Wrap"/>
 
-                                <CheckBox Grid.Row="1" Grid.ColumnSpan="3" Margin="0 5 0 0"
+                                <CheckBox Grid.Row="0" Grid.ColumnSpan="3" Margin="0 0 0 0"
+                                      IsChecked="{Binding ShowDescriptionFields, UpdateSourceTrigger=PropertyChanged}" 
+                                      Content="Show description fields"/>
+
+                                <TextBlock Grid.Row="1" Grid.Column="0" Text="Container description" VerticalAlignment="Center" Margin="0 5 5 0"
+                                           Visibility="{Binding ShowDescriptionFields, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                                <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}" Padding="3" TextWrapping="Wrap"
+                                           Visibility="{Binding ShowDescriptionFields, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
+                                <StackPanel Orientation="Vertical" Grid.Row="2" Grid.ColumnSpan="2" Margin="0 5 0 0">
+                                    <CheckBox Grid.Column="0" Margin="0 0 0 0"
                                       IsChecked="{Binding KeepOpenOnceDone, UpdateSourceTrigger=PropertyChanged}" 
                                       Content="Keep Console open once done"/>
+                                    <CheckBox Grid.Column="1" Margin="0 5 0 0"
+                                      IsChecked="{Binding ConcatenateCommands, UpdateSourceTrigger=PropertyChanged}" 
+                                      Content="Concatenate commands for execution">
+                                        <CheckBox.ToolTip>
+                                            <TextBlock>
+                                            Commands are concatenated similar to 'cmd1 &amp;&amp; cmd2'.
+                                            <LineBreak/>
+                                            May be necessary e.g. when changing modifying current shell by 'conda activate' or the like.
+                                            </TextBlock>
+                                        </CheckBox.ToolTip>
+                                    </CheckBox>
+                                </StackPanel>
+                                <!--<CheckBox Grid.Row="2" Margin="0 5 0 0"
+                                    IsChecked="{Binding KeepOpenOnceDone, UpdateSourceTrigger=PropertyChanged}" 
+                                    Content="Keep Console open once done"/>
 
-                                <Button Grid.Row="0" Grid.RowSpan="2" Grid.Column="2" FontFamily="Segoe MDL2 Assets" Content="&#xEF2C;"
+                                <CheckBox Grid.Row="2" Margin="0 5 0 0"
+                                    IsChecked="{Binding ConcatenateCommands, UpdateSourceTrigger=PropertyChanged}" 
+                                    Content="Concatenate commands for execution">
+                                    <CheckBox.ToolTip>
+                                        <TextBlock>
+                                        Commands are concatenated similar to 'cmd1 &amp;&amp; cmd2'.
+                                        <LineBreak/>
+                                        May be necessary e.g. when changing modifying current shell by 'conda activate' or the like.
+                                        </TextBlock>
+                                    </CheckBox.ToolTip>
+                                </CheckBox>-->
+
+                                <Button Grid.Row="0" Grid.RowSpan="3" Grid.Column="2" FontFamily="Segoe MDL2 Assets" Content="&#xEF2C;"
                                     Padding="5" FontSize="16" Margin="5 0 0 0" Click="btnRemoveContainer_Click"/>
                             </Grid>
-                            <!--<DataGrid CanUserAddRows="True" CanUserDeleteRows="True" ItemsSource="{Binding Commands}" AutoGenerateColumns="False">
-                                <DataGrid.Columns>
-                                    <DataGridCheckBoxColumn Header="Print description" Binding="{Binding PrintDescription}"/>
-                                    <DataGridCheckBoxColumn Header="Print command" Binding="{Binding PrintCommand}"/>
-                                    <DataGridTextColumn Header="Command" Binding="{Binding ExecutionString}"/>
-                                    <DataGridTextColumn Header="Description" Binding="{Binding Description}"/>
-                                </DataGrid.Columns>
-                            </DataGrid>-->
-                            <ListView x:Name="lv_Commands" Grid.Row="3" ItemsSource="{Binding Commands}" ScrollViewer.CanContentScroll="False"
-                                      PreviewMouseWheel="lv_Commands_PreviewMouseWheel">
+                            <TextBlock Text="commands" Margin="0" FontSize="14" FontWeight="SemiBold"/>
+                            <ListView x:Name="lv_Commands" ItemsSource="{Binding Commands}" ScrollViewer.CanContentScroll="False"
+                                      PreviewMouseWheel="lv_Commands_PreviewMouseWheel"
+                                      dd:DragDrop.IsDragSource="True"
+                                      dd:DragDrop.IsDropTarget="True" >
                                 <ListView.ItemContainerStyle>
                                     <Style TargetType="{x:Type ListViewItem}">
                                         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -151,15 +185,27 @@
                                                 <RowDefinition Height="Auto"/>
                                             </Grid.RowDefinitions>
 
-                                            <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="Description"/>
-                                            <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Text="Command"/>
+                                            <TextBlock Grid.Row="0" Grid.Column="0" VerticalAlignment="Center" Text="Description"
+                                                       Visibility="{Binding RelativeSource={RelativeSource AncestorType=ListView}, 
+                                                Path=DataContext.ShowDescriptionFields, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                     />
+                                            <TextBlock Grid.Row="1" Grid.Column="0" VerticalAlignment="Center" Text="Command"
+                                                       Visibility="{Binding RelativeSource={RelativeSource AncestorType=ListView}, 
+                                                Path=DataContext.ShowDescriptionFields, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                     />
                                             <ToggleButton Grid.Row="0" Grid.Column="1" Margin="5 2" Style="{StaticResource ToggleButton_VisibilityTemplate}" 
-                                                          IsChecked="{Binding PrintDescription}"/>
+                                                          IsChecked="{Binding PrintDescription}" ToolTip="When active, the description is output before executing the command."
+                                                          Visibility="{Binding RelativeSource={RelativeSource AncestorType=ListView}, 
+                                                Path=DataContext.ShowDescriptionFields, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                     />
                                             <ToggleButton Grid.Row="1" Grid.Column="1" Margin="5 2" Style="{StaticResource ToggleButton_VisibilityTemplate}" 
-                                                          IsChecked="{Binding PrintCommand}"/>
-                                            <TextBox Grid.Row="0" Grid.Column="2" Text="{Binding Description}"/>
-                                            <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding ExecutionString}"/>
-
+                                                          IsChecked="{Binding PrintCommand}" ToolTip="When active, the actual command execution is displayed."/>
+                                            <TextBox Grid.Row="0" Grid.Column="2" VerticalContentAlignment="Center" 
+                                                     Text="{Binding Description}"
+                                                     Visibility="{Binding RelativeSource={RelativeSource AncestorType=ListView}, 
+                                                Path=DataContext.ShowDescriptionFields, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                     />
+                                            <TextBox Grid.Row="1" Grid.Column="2" Text="{Binding ExecutionString}" VerticalContentAlignment="Center"/>
 
                                             <Button Grid.Row="0" Grid.RowSpan="4" Grid.Column="3" FontFamily="Segoe MDL2 Assets" Content="&#xEF2C;" FontWeight="Light"
                                                     Padding="2" FontSize="12" Margin="2 0 0 0" Click="btnRemoveCommand_Click"/>
@@ -167,7 +213,7 @@
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
-                            <Button Grid.Row="4" Width="Auto" Height="Auto" HorizontalAlignment="Left" Content="add" Padding="10 4" Margin="5" Click="btnAddCommand_Click">
+                            <Button Grid.Row="5" Width="Auto" Height="Auto" HorizontalAlignment="Left" Content="add" Padding="10 4" Margin="5" Click="btnAddCommand_Click">
                                 <Button.Resources>
                                     <Style TargetType="Border">
                                         <Setter Property="CornerRadius" Value="8"/>

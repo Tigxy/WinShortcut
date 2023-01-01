@@ -1,15 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using win_short_cut.DataClasses;
 
 namespace win_short_cut.Utils {
     public static class ShortcutBuilder {
+        public static string GetPrimaryShortcutPath(Shortcut shortcut) {
+            return System.IO.Path.Join(Globals.ShortcutBinPath, $"{shortcut.Name}.bat");
+        }
+
+        public static void DeleteAllShortcutFiles() {
+            System.IO.DirectoryInfo di = new(Globals.ShortcutBinPath);
+            foreach (System.IO.FileInfo file in di.GetFiles()) {
+                file.Delete();
+            }
+        }
+
+        public static void RecreateShortcutFiles() {
+            DeleteAllShortcutFiles();
+            GenerateShortcutFiles();
+        }
+
         public static void GenerateShortcutFiles() {
             foreach (var shortcut in Globals.Shortcuts)
                 ShortcutToFile(shortcut);
+        }
+
+        public static bool ValidateShortcut(Shortcut shortcut, bool showWarningToUser=true) {
+            if (String.IsNullOrWhiteSpace(shortcut.Name)) {
+                if (showWarningToUser) {
+                    var mb = new PopUps.MessageBox(App.Current.MainWindow, $"Shortcut name must not be left empty!", "Invalid shortcut");
+                    mb.ShowDialog();
+                }
+                return false;
+            }
+
+            if (shortcut.Name.Contains("__")) {
+                if (showWarningToUser) {
+                    var mb = new PopUps.MessageBox(App.Current.MainWindow, $"Shortcut name must not contain double underscore '_'!", "Invalid shortcut");
+                    mb.ShowDialog();
+                }
+                return false;
+            }
+
+            if (Globals.Shortcuts.Where(x => x.Name == shortcut.Name && x.Id != shortcut.Id).Any()) {
+                if (showWarningToUser) {
+                    var mb = new PopUps.MessageBox(App.Current.MainWindow, $"Shortcut with identical name already exists!", "Invalid shortcut");
+                    mb.ShowDialog();
+                }
+                return false;
+            }
+
+            return true;
         }
 
         public static void ShortcutToFile(Shortcut shortcut) {
@@ -25,22 +71,43 @@ namespace win_short_cut.Utils {
                     var container = shortcut.Containers[i];
                     string containerFile = System.IO.Path.Combine(Globals.ShortcutBinPath, $"{shortcut.Name}__{i}.bat");
 
-                    string command = container.KeepOpenOnceDone
-                        ? $"start cmd.exe /k \"{containerFile}\""
-                        : $"start cmd.exe /c \"{containerFile}\"";
+                    char keepOpenFlag = container.KeepOpenOnceDone ? 'k' : 'c';
+                    string command = $"cmd.exe /{keepOpenFlag} \"{containerFile}\"";
+
+                    string newConsoleTitle = $"{shortcut.Name}";
+                    if (shortcut.Containers.Count > 1)
+                        newConsoleTitle += $"-{i}"; 
+                    command = $"start \"{newConsoleTitle}\" {command}";
+
                     bb.Execute(command, true);
 
                     ContainerToFile(container, containerFile);
                 }
             }
 
-            bb.ToFile(System.IO.Path.Combine(Globals.ShortcutBinPath, $"{shortcut.Name}.bat"));
+            bb.ToFile(GetPrimaryShortcutPath(shortcut));
         }
 
         public static void DeleteShortcut(Shortcut shortcut) {
-            string filePath = System.IO.Path.Join(Globals.ShortcutBinPath, $"{shortcut.Name}.bat");
-            if (System.IO.File.Exists(filePath))
-                System.IO.File.Delete(filePath);
+            System.IO.DirectoryInfo di = new(Globals.ShortcutBinPath);
+            foreach (System.IO.FileInfo file in di.GetFiles()) {
+                string fileName = System.IO.Path.GetFileNameWithoutExtension(file.FullName);
+             
+                // delete all files that match current shortcut name
+                Match m = Regex.Match(fileName, @$"{shortcut.Name}(__\d+)?");
+                if (m.Success)
+                    file.Delete();
+            }
+        }
+
+        public static void ExecuteShortcut(Shortcut shortcut) {
+            ProcessStartInfo startInfo = new() {
+                FileName = GetPrimaryShortcutPath(shortcut),
+                // start in user directory to show a 'pretty' path in the command prompt
+                WorkingDirectory = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile)
+            };
+            Process process = new() { StartInfo = startInfo };
+            process.Start();
         }
 
         private static void ContainerToFile(CommandContainer container, string path) {
@@ -51,17 +118,31 @@ namespace win_short_cut.Utils {
             bb.Comment("Description: " + container.Description);
             bb.Comment(new string('=', 40));
 
+            // execute all commands together, as this may help when later commands are getting lost due to e.g. 'conda activate'
+            // for more info, see the questions to this StackOverflow question: https://stackoverflow.com/q/69068
+            if (container.ConcatenateCommands)
+                bb.Execute("(", silent:true);   // silence command, otherwise all inside brackets is repeated
+
             container.Commands.ForEach(command => {
+
                 if (!String.IsNullOrWhiteSpace(command.Description)) {
                     // No need to set a comment if we already echo it
                     if (command.PrintDescription)
-                        bb.Echo(command.Description);
+                        bb.Echo(command.Description, silent: !container.ConcatenateCommands);
                     else
                         bb.Comment(command.Description);
                 }
 
-                bb.Execute(command.ExecutionString, silent: !command.PrintCommand);
+                // simulate command output if requested
+                if (container.ConcatenateCommands && command.PrintCommand) {
+                    bb.Echo($"%cd%^>{command.ExecutionString} & :: simulate call", silent: false); // '^' to escape special '>' character, see https://stackoverflow.com/a/7308614
+                }
+
+                bb.Execute(command.ExecutionString, silent: !command.PrintCommand && !container.ConcatenateCommands);
             });
+
+            if (container.ConcatenateCommands)
+                bb.Execute(")");
 
             bb.ToFile(path);
         }
