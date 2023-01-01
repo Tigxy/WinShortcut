@@ -70,6 +70,20 @@ namespace win_short_cut.Pages {
         }
 
         private void btnBack_Click(object sender, RoutedEventArgs e) {
+
+            Shortcut? d = Globals.Shortcuts.Where(s => s.Id == Shortcut.Id).FirstOrDefault();
+            if (d != default && !d.DeepEqual(Shortcut)) {
+                var mb = new PopUps.MessageBox_YesNo(App.Current.MainWindow,
+                        $"Would you like to drop your changes?",
+                        "Shortcut changed");
+
+                mb.ShowDialog();
+
+                // let user manually save if they want to store changes
+                if (mb.Result != MessageBoxResult.Yes)
+                    return;
+            }
+
             PageManager.Instance.SwitchToPage("overview");
         }
 
