@@ -33,7 +33,7 @@ namespace win_short_cut.Pages {
             if (sender is Button btn)
                 if (btn.DataContext is Shortcut shortcut) {
                     Shortcut newShortcut = shortcut.DeepClone();
-                    newShortcut.Id = new Guid();
+                    newShortcut.Id = Guid.NewGuid();
 
                     int i = 1;
                     string baseNameSuggestion = newShortcut.Name + "_copy";
