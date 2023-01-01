@@ -28,7 +28,7 @@
         <Button Grid.Row="0" FontFamily="Segoe MDL2 Assets" Content="&#xE72C;"
                 FontSize="20" Padding="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
                 HorizontalAlignment="Right" VerticalAlignment="Center" Background="Transparent" Click="btnRefreshAll_Click"
-                ToolTip="Recreate all commands"
+                ToolTip="Recreate all shortcuts"
                 />
 
         <ListView x:Name="lv" Grid.Row="1" ItemsSource="{Binding Source={x:Static local:Globals.Shortcuts}}"

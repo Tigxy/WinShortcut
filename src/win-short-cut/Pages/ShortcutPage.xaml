@@ -118,7 +118,7 @@
 
                                 <CheckBox Grid.Row="0" Grid.ColumnSpan="3" Margin="0 0 0 0"
                                       IsChecked="{Binding ShowDescriptionFields, UpdateSourceTrigger=PropertyChanged}" 
-                                      Content="Show description fields"/>
+                                      Content="show description fields"/>
 
                                 <TextBlock Grid.Row="1" Grid.Column="0" Text="Container description" VerticalAlignment="Center" Margin="0 5 5 0"
                                            Visibility="{Binding ShowDescriptionFields, Converter={StaticResource BooleanToVisibilityConverter}}"/>
@@ -128,10 +128,10 @@
                                 <StackPanel Orientation="Vertical" Grid.Row="2" Grid.ColumnSpan="2" Margin="0 5 0 0">
                                     <CheckBox Grid.Column="0" Margin="0 0 0 0"
                                       IsChecked="{Binding KeepOpenOnceDone, UpdateSourceTrigger=PropertyChanged}" 
-                                      Content="Keep Console open once done"/>
+                                      Content="keep console open once done"/>
                                     <CheckBox Grid.Column="1" Margin="0 5 0 0"
                                       IsChecked="{Binding ConcatenateCommands, UpdateSourceTrigger=PropertyChanged}" 
-                                      Content="Concatenate commands for execution">
+                                      Content="concatenate commands for execution">
                                         <CheckBox.ToolTip>
                                             <TextBlock>
                                             Commands are concatenated similar to 'cmd1 &amp;&amp; cmd2'.
@@ -226,7 +226,7 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <Button Grid.Row="4" Width="Auto" Height="Auto" HorizontalAlignment="Center" Content="add new container" Padding="10 4" Margin="5" Click="btnAddContainer_Click">
+        <Button Grid.Row="4" Width="Auto" Height="Auto" HorizontalAlignment="Center" Content="add new block" Padding="10 4" Margin="5" Click="btnAddContainer_Click">
             <Button.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="8"/>
