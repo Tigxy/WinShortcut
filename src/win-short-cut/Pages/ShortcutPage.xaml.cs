@@ -134,7 +134,7 @@ namespace win_short_cut.Pages {
         }
 
         private void btnAddContainer_Click(object sender, RoutedEventArgs e) {
-            Shortcut.Containers.Add(new CommandContainer());
+            Shortcut.Containers.Add(new CommandContainer() { Commands = new() { new () } });
         }
 
         private void btnRemoveContainer_Click(object sender, RoutedEventArgs e) {
