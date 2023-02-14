@@ -1,11 +1,8 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using win_short_cut.DataClasses;
 using win_short_cut.Pages;
-using win_short_cut.Utils;
 
-namespace win_short_cut
-{
+namespace win_short_cut {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>

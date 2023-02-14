@@ -1,7 +1,4 @@
-﻿using System.Windows.Controls;
-
-namespace win_short_cut.Pages
-{
+﻿namespace win_short_cut.Pages {
     public interface ILoadablePage
     {
         public void LoadPage();

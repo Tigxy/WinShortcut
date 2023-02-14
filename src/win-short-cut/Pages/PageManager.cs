@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 
-namespace win_short_cut.Pages
-{
+namespace win_short_cut.Pages {
     internal class PageManager : INotifyPropertyChanged
     {
         // Helper for thread safety

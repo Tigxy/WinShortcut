@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace win_short_cut.Utils
-{
+namespace win_short_cut.Utils {
     internal class Serialization
     {
         public static void Store<T>(T obj, string path)

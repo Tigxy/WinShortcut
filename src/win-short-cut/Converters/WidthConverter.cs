@@ -2,8 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace win_short_cut.Converters
-{
+namespace win_short_cut.Converters {
     public class WidthConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
