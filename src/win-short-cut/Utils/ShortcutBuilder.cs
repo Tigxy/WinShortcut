@@ -33,7 +33,7 @@ namespace win_short_cut.Utils {
         public static bool ValidateShortcut(Shortcut shortcut, bool showWarningToUser=true) {
             if (String.IsNullOrWhiteSpace(shortcut.Name)) {
                 if (showWarningToUser) {
-                    var mb = new PopUps.MessageBox(App.Current.MainWindow, $"Shortcut name must not be left empty!", "Invalid shortcut");
+                    var mb = new PopUps.MessageBox(App.Current.MainWindow, $"Please assign a name to your shortcut!", "Invalid shortcut");
                     mb.ShowDialog();
                 }
                 return false;
@@ -41,7 +41,7 @@ namespace win_short_cut.Utils {
 
             if (shortcut.Name.Contains("__")) {
                 if (showWarningToUser) {
-                    var mb = new PopUps.MessageBox(App.Current.MainWindow, $"Shortcut name must not contain double underscore '_'!", "Invalid shortcut");
+                    var mb = new PopUps.MessageBox(App.Current.MainWindow, $"Your shortcut name must not contain double underscore '_'!", "Invalid shortcut");
                     mb.ShowDialog();
                 }
                 return false;
@@ -49,7 +49,7 @@ namespace win_short_cut.Utils {
 
             if (Globals.Shortcuts.Where(x => x.Name == shortcut.Name && x.Id != shortcut.Id).Any()) {
                 if (showWarningToUser) {
-                    var mb = new PopUps.MessageBox(App.Current.MainWindow, $"Shortcut with identical name already exists!", "Invalid shortcut");
+                    var mb = new PopUps.MessageBox(App.Current.MainWindow, $"Another shortcut with an identical name already exists!", "Invalid shortcut");
                     mb.ShowDialog();
                 }
                 return false;
