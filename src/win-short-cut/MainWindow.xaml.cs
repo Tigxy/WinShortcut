@@ -11,7 +11,6 @@ namespace win_short_cut
     /// </summary>
     public partial class MainWindow : Window
     {
-
         public MainWindow()
         {
             InitializeComponent();
@@ -88,32 +87,6 @@ namespace win_short_cut
             (bool success, Shortcuts? data) = Utils.Serialization.Load<Shortcuts>(Globals.ShortcutDataFile);
             if (success)
                 data!.ForEach(x => Globals.Shortcuts.Add(x));
-        }
-
-        private Shortcut CreateDummyShortcut()
-        {
-            return new Shortcut()
-            {
-                Name = "test",
-                Description = "Some test shortcut",
-                Containers = new() {
-                    new CommandContainer() {
-                        KeepOpenOnceDone = true,
-                        Description = "one container",
-                        Commands = new() {
-                            new Command() { ExecutionString = "explorer.exe", PrintCommand = true}
-                        }
-                    },
-                    new CommandContainer() {
-                        KeepOpenOnceDone = true,
-                        Description = "another container",
-                        Commands = new() {
-                            new Command() { ExecutionString = "explorer.exe", PrintCommand = true},
-                            new Command() { ExecutionString = "explorer.exe", PrintCommand = true}
-                        }
-                    }
-                }
-            };
         }
     }
 }
