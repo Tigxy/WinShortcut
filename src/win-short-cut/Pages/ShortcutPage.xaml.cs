@@ -50,14 +50,8 @@ namespace win_short_cut.Pages {
 
         public void LoadPage() {
             Shortcut = new();
-
-            CommandContainer container = new();
-            container.Commands.Add(new());
-
-            Shortcut.Containers.Add(container);
-            
+            AddNewContainer();
             IsNewShortcut = true;
-            tb_ShortcutName.Focus();
         }
 
         public void LoadPage(params object[] parameters) {
@@ -67,6 +61,9 @@ namespace win_short_cut.Pages {
             }
             else
                 LoadPage();
+
+            tb_ShortcutName.Focus();
+            tb_ShortcutName.CaretIndex = tb_ShortcutName.Text.Length;
         }
 
         private void btnBack_Click(object sender, RoutedEventArgs e) {
@@ -74,7 +71,7 @@ namespace win_short_cut.Pages {
             Shortcut? d = Globals.Shortcuts.Where(s => s.Id == Shortcut.Id).FirstOrDefault();
             if (d != default && !d.DeepEqual(Shortcut)) {
                 var mb = new PopUps.MessageBox_YesNo(App.Current.MainWindow,
-                        $"Would you like to drop your changes?",
+                        $"You have changed your shortcut. Are you sure you don't want to save them?",
                         "Shortcut changed");
 
                 mb.ShowDialog();
@@ -95,6 +92,8 @@ namespace win_short_cut.Pages {
         }
 
         private void StoreShortcut() {
+            TidyUpShortcut();
+
             bool foundMatch = false;
             for (int i = 0; i < Globals.Shortcuts.Count; i++) {
                 // compare ids and take over all changes
@@ -113,36 +112,71 @@ namespace win_short_cut.Pages {
 
             Utils.ShortcutBuilder.ShortcutToFile(Shortcut);
         }
+
+        private void TidyUpShortcut() {
+            for (int i = Shortcut.Containers.Count - 1; i >= 0; i--) {
+                CommandContainer container = Shortcut.Containers[i];
+
+                // drop empty commands
+                for (int j = container.Commands.Count - 1; j >= 0; j--) {
+                    Command command = container.Commands[j];
+                    // only keep commands that are different to newly initialized ones
+                    if (command.IsDefault())
+                        container.Commands.Remove(command);
+                }
+
+                // only keep containers that are different to newly initialized ones
+                if (container.IsDefault())
+                    Shortcut.Containers.Remove(container);
+                else {
+                    // still require containers to have at least one command ...
+                    if (container.Commands.Count == 0)
+                        container.Commands.Add(new());
+                }
+            }
+            // require to have at least one container per shortcut
+            if (Shortcut.Containers.Count == 0)
+                AddNewContainer();
+        }
+
         private void btnAddCommand_Click(object sender, RoutedEventArgs e) {
             if (sender is Button button)
                 if (button.DataContext is CommandContainer container)
-                    container.Commands.Add(new Command());
+                    AddNewCommandToContainer(container);
         }
 
         private void btnRemoveCommand_Click(object sender, RoutedEventArgs e) {
             if (sender is Button button) {
-                // totally hacky solution via Id..
-                // TODO: solve this by going up the visual tree and finding FrameworkElement where DataContext matches CommandContainer
                 if (button.DataContext is Command command) {
                     foreach (var container in Shortcut.Containers) {
                         var matchingCommands = container.Commands.Where(com => com.Id == command.Id);
                         if (matchingCommands.Any())
                             container.Commands.Remove(matchingCommands.First());
+
+                        // it would not make any sense to have no commands in a specific container
+                        if (container.Commands.Count == 0)
+                            AddNewCommandToContainer(container);
                     }
                 }
             }
         }
 
-        private void btnAddContainer_Click(object sender, RoutedEventArgs e) {
-            Shortcut.Containers.Add(new CommandContainer() { Commands = new() { new () } });
-        }
+        private void btnAddContainer_Click(object sender, RoutedEventArgs e) => AddNewContainer();
 
         private void btnRemoveContainer_Click(object sender, RoutedEventArgs e) {
             if (sender is Button button) {
                 if (button.DataContext is CommandContainer container) {
                     Shortcut.Containers.Remove(container);
+
+                    // it would not make any sense to have a command without containers
+                    if (Shortcut.Containers.Count == 0)
+                        AddNewContainer();
                 }
             }
+        }
+
+        private void AddNewContainer() {
+            Shortcut.Containers.Add(new CommandContainer() { Commands = new() { new() } });
         }
 
         private void lv_Commands_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e) {
@@ -156,5 +190,57 @@ namespace win_short_cut.Pages {
                 parent?.RaiseEvent(eventArg);
             }
         }
+
+        private void CommandDescriptionField_PreviewKeyDown(object sender, KeyEventArgs e) {
+            if (e.Key == Key.Enter) {
+                if (sender is TextBox tb) {
+                    if (tb.DataContext is Command cmd) {
+                        cmd.IsCommandFocused = true;
+                    }
+                }
+            }
+        }
+
+        private void CommandExecutionField_PreviewKeyDown(object sender, KeyEventArgs e) {
+            if (e.Key == Key.Enter) {
+                if (sender is TextBox tb) {
+                    if (tb.DataContext is Command cmd) {
+                        CommandContainer? parentContainer = GetCommandParentContainer(cmd);
+                        if (parentContainer != null && parentContainer.Commands.Contains(cmd)) {
+                            // if command is the last in the container, we add a new command
+                            if (parentContainer.Commands.Last().Equals(cmd)) {
+                                if (!string.IsNullOrWhiteSpace(cmd.ExecutionString))
+                                    AddNewCommandToContainer(parentContainer);
+                            }
+                            // otherwise we just switch the focus to the next command
+                            else {
+                                int idx = parentContainer.Commands.IndexOf(cmd);
+                                Command nextCommand = parentContainer.Commands[idx + 1];
+
+                                if (parentContainer.ShowDescriptionFields)
+                                    nextCommand.IsDescriptionFocused = true;
+                                else
+                                    nextCommand.IsCommandFocused = true;                                
+                            }                                
+                        }
+                    }
+                }
+            }
+        }
+
+        private CommandContainer? GetCommandParentContainer(Command command) => Shortcut.Containers
+                            .Where(container => container.Commands.Any(c => c.Id == command.Id))
+                            .FirstOrDefault();
+
+        private void AddCommandToContainer(CommandContainer container, Command command) {
+            container.Commands.Add(command);
+            // provide proper focus on next text field
+            if (container.ShowDescriptionFields)
+                command.IsDescriptionFocused = true;
+            else
+                command.IsCommandFocused = true;
+        }
+
+        private void AddNewCommandToContainer(CommandContainer container) => AddCommandToContainer(container, new Command());
     }
 }
