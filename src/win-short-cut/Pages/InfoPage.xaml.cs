@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,7 +13,7 @@ namespace win_short_cut.Pages {
     /// </summary>
     public partial class InfoPage : UserControl, ILoadablePage {
 
-        public string Version { get; } = System.Reflection.Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "unknown";
+        public string Version { get; } = Utils.AppUtils.GetAppVersion()?.ToString() ?? "unknown";
 
         public InfoPage() {
             InitializeComponent();
