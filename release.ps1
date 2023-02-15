@@ -39,13 +39,13 @@ if (Test-Path $outDir) {
 Push-Location $projDir
 try {
     Write-Output "Restoring:"
-    dotnet restore "$projDir/WinShortcut.csproj" -r win-x64
+    dotnet restore "WinShortcut.csproj" -r win-x64
     Write-Output "Publishing:"
     $msBuildVerbosityArg = "/v:m"
     if ($env:CI) {
         $msBuildVerbosityArg = ""
     }
-    & $msBuildPath "$projDir/WinShortcut.csproj" /target:publish /p:PublishProfile=ClickOnceProfile `
+    & $msBuildPath "WinShortcut.csproj" /target:publish /p:PublishProfile=ClickOnceProfile `
         /p:ApplicationVersion=$version /p:Configuration=Release `
         /p:PublishDir=$publishDir /p:PublishUrl=$publishDir `
         $msBuildVerbosityArg
