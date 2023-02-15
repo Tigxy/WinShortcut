@@ -1,2 +1,2 @@
-# win-short-cut
+# WinShortcut
 C# application to define Windows console shortcuts
