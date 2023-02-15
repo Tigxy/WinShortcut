@@ -45,7 +45,7 @@
             <StackPanel Grid.Row="0" >
                 <TextBlock FontSize="25" FontWeight="Bold" Text="win-short-cut" />
                 <TextBlock TextWrapping="Wrap">
-                This tool allows you to create a shortcut command, with which you can execute multiple commands at once. For more information, please check out the 
+                This tool allows you to create a shortcut command, with which you can execute multiple commands at once. For more information, please check out the project's 
                 <ce:ExternalBrowserHyperlink NavigateUri="https://github.com/Tigxy/win-short-cut">Github page</ce:ExternalBrowserHyperlink>.
                 </TextBlock>
                 <StackPanel Margin="0 5" Orientation="Horizontal">
