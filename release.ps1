@@ -45,7 +45,7 @@ try {
     if ($env:CI) {
         $msBuildVerbosityArg = ""
     }
-    & $msBuildPath /target:publish /p:PublishProfile=ClickOnceProfile `
+    & $msBuildPath "$projDir/WinShortcut.csproj" /target:publish /p:PublishProfile=ClickOnceProfile `
         /p:ApplicationVersion=$version /p:Configuration=Release `
         /p:PublishDir=$publishDir /p:PublishUrl=$publishDir `
         $msBuildVerbosityArg
