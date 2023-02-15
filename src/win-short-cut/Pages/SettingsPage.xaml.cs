@@ -6,7 +6,7 @@ namespace win_short_cut.Pages
     /// <summary>
     /// Interaktionslogik für SettingsPage.xaml
     /// </summary>
-    public partial class SettingsPage : Page, ILoadablePage
+    public partial class SettingsPage : UserControl, ILoadablePage
     {
         public SettingsPage()
         {

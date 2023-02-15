@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:win_short_cut.PopUps"
         mc:Ignorable="d"
-        Title="MessageBox" Height="200" Width="500"
+        Title="MessageBox" Height="200" Width="500" ResizeMode="NoResize"
         SizeToContent="Height"
         FontSize="14">
     <Grid Margin="0">
@@ -14,7 +14,8 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         
-        <TextBlock Grid.Row="0" Text="{Binding Message}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5 10"/>
+        <TextBlock Grid.Row="0" Text="{Binding Message}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5 10"
+                   TextWrapping="Wrap" TextAlignment="Center"/>
 
         <StackPanel Orientation="Horizontal" Grid.Row="1" HorizontalAlignment="Center" Margin="10">
             <Button Content="Yes" HorizontalAlignment="Center" Margin="0 0 10 0" Padding="20 5" 

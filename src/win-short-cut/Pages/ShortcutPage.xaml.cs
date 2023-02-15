@@ -10,7 +10,7 @@ namespace win_short_cut.Pages {
     /// <summary>
     /// Interaktionslogik für ShortcutPage.xaml
     /// </summary>
-    public partial class ShortcutPage : Page, ILoadablePage, INotifyPropertyChanged {
+    public partial class ShortcutPage : UserControl, ILoadablePage, INotifyPropertyChanged {
 
         private Shortcut _shortcut = new();
 
@@ -70,7 +70,7 @@ namespace win_short_cut.Pages {
             Shortcut? d = Globals.Shortcuts.Where(s => s.Id == Shortcut.Id).FirstOrDefault();
             if (d != default && !d.DeepEqual(Shortcut)) {
                 var mb = new PopUps.MessageBox_YesNo(App.Current.MainWindow,
-                        $"You have changed your shortcut. Are you sure you don't want to save them?",
+                        $"You have changed your shortcut!\nAre you sure you don't want to save your changes?",
                         "Shortcut changed");
 
                 mb.ShowDialog();

@@ -1,21 +1,21 @@
-﻿<Page x:Class="win_short_cut.Pages.ShortcutsPage"
-      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:win_short_cut" xmlns:Converters="clr-namespace:win_short_cut.Converters"
-      xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
-      mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
-      Title="ShortcutPage">
+﻿<UserControl x:Class="win_short_cut.Pages.ShortcutsPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
+             xmlns:local="clr-namespace:win_short_cut"
+             xmlns:Converters="clr-namespace:win_short_cut.Converters"
+             mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800">
     <d:DesignerProperties.DesignStyle>
-        <Style TargetType="Page">
+        <Style TargetType="UserControl">
             <Setter Property="Background" Value="White"/>
         </Style>
     </d:DesignerProperties.DesignStyle>
-    <Page.Resources>
+    <UserControl.Resources>
         <Converters:WidthConverter x:Key="WidthConverter"/>
-    </Page.Resources>
+    </UserControl.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
@@ -57,12 +57,12 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel HorizontalAlignment="Left">
-                                    <TextBlock Text="{Binding Name}" Background="LightGray" Padding="4 3" FontFamily="Roboto Mono"/>
+                                    <TextBlock Text="{Binding Name}" Background="LightGray" Padding="4 3" FontFamily="Courier New"/>
                                 </StackPanel>
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    
+
                     <!-- Description column -->
                     <GridViewColumn Header="Description" DisplayMemberBinding="{Binding Description}"
                                     Width="{Binding ElementName=lv, Path=ActualWidth, Converter={StaticResource WidthConverter}, ConverterParameter=55}">
@@ -110,4 +110,4 @@
             </Button.Resources>
         </Button>
     </Grid>
-</Page>
+</UserControl>

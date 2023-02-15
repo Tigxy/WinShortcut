@@ -10,7 +10,7 @@ namespace win_short_cut.Pages {
     /// <summary>
     /// Interaktionslogik für ShortcutsPage.xaml
     /// </summary>
-    public partial class ShortcutsPage : Page, ILoadablePage {
+    public partial class ShortcutsPage : UserControl, ILoadablePage {
 
         public ShortcutsPage() {
             InitializeComponent();
@@ -76,6 +76,10 @@ namespace win_short_cut.Pages {
             Utils.ShortcutBuilder.RecreateShortcutFiles();
         }
 
+        private void btnShowInfo_Click(object sender, RoutedEventArgs e) {
+            PageManager.Instance.SwitchToPage("info");
+        }
+        
         public void LoadPage() { }
 
         public void LoadPage(params object[] parameters) { }
