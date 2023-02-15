@@ -39,7 +39,7 @@ if (Test-Path $outDir) {
 Push-Location $projDir
 try {
     Write-Output "Restoring:"
-    dotnet restore -r win-x64
+    dotnet restore "$projDir/WinShortcut.csproj" -r win-x64
     Write-Output "Publishing:"
     $msBuildVerbosityArg = "/v:m"
     if ($env:CI) {
