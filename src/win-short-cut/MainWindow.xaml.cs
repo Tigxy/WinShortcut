@@ -25,6 +25,7 @@ namespace win_short_cut {
 
             PageManager.Instance.RegisterPage("overview", new ShortcutsPage());
             PageManager.Instance.RegisterPage("edit", new ShortcutPage());
+            PageManager.Instance.RegisterPage("info", new InfoPage());
 
             PageManager.Instance.SwitchToPage("overview");
         }
