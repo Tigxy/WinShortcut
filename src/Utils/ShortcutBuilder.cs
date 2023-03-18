@@ -6,12 +6,16 @@ using win_short_cut.DataClasses;
 
 namespace win_short_cut.Utils {
     public static class ShortcutBuilder {
-        public static string GetPrimaryShortcutPath(Shortcut shortcut) {
-            return System.IO.Path.Join(Globals.ShortcutBinPath, $"{shortcut.Name}.bat");
+        public static string GetPrimaryBatPath(Shortcut shortcut) {
+            return System.IO.Path.Join(Globals.ShortcutBatPath, $"{shortcut.Name}.bat");
+        }
+
+        public static string GetShortcutPath(Shortcut shortcut) {
+            return System.IO.Path.Join(Globals.ShortcutPath, $"{shortcut.Name}.lnk");
         }
 
         public static void DeleteAllShortcutFiles() {
-            System.IO.DirectoryInfo di = new(Globals.ShortcutBinPath);
+            System.IO.DirectoryInfo di = new(Globals.ShortcutBatPath);
             foreach (System.IO.FileInfo file in di.GetFiles()) {
                 file.Delete();
             }
@@ -66,15 +70,19 @@ namespace win_short_cut.Utils {
             if (shortcut.Containers != null) {
                 for (int i = 0; i < shortcut.Containers.Count; i++) {
                     var container = shortcut.Containers[i];
-                    string containerFile = System.IO.Path.Combine(Globals.ShortcutBinPath, $"{shortcut.Name}__{i}.bat");
+                    string containerFile = System.IO.Path.Combine(Globals.ShortcutBatPath, $"{shortcut.Name}__{i}.bat");
 
                     char keepOpenFlag = container.KeepOpenOnceDone ? 'k' : 'c';
                     string command = $"cmd.exe /{keepOpenFlag} \"{containerFile}\"";
 
                     string newConsoleTitle = $"{shortcut.Name}";
                     if (shortcut.Containers.Count > 1)
-                        newConsoleTitle += $"-{i}"; 
-                    command = $"start \"{newConsoleTitle}\" {command}";
+                        newConsoleTitle += $"-{i}";
+
+                    string startCommand = "start";
+                    if (container.ExecuteMinimized)
+                        startCommand += " /min";
+                    command = $"{startCommand} \"{newConsoleTitle}\" {command}";
 
                     bb.Execute(command, true);
 
@@ -82,11 +90,17 @@ namespace win_short_cut.Utils {
                 }
             }
 
-            bb.ToFile(GetPrimaryShortcutPath(shortcut));
+            // create shortcut bat file
+            string batPath = GetPrimaryBatPath(shortcut);
+            bb.ToFile(batPath);
+
+            // create shortcut
+            string shortcutPath = GetShortcutPath(shortcut);
+            Sys.CreateShortcut(batPath, shortcutPath, Sys.ShortcutWindowStyle.Minimized);
         }
 
         public static void DeleteShortcut(Shortcut shortcut) {
-            System.IO.DirectoryInfo di = new(Globals.ShortcutBinPath);
+            System.IO.DirectoryInfo di = new(Globals.ShortcutBatPath);
             foreach (System.IO.FileInfo file in di.GetFiles()) {
                 string fileName = System.IO.Path.GetFileNameWithoutExtension(file.FullName);
              
@@ -95,13 +109,18 @@ namespace win_short_cut.Utils {
                 if (m.Success)
                     file.Delete();
             }
+
+            string actShortcutPath = System.IO.Path.Join(Globals.ShortcutPath, shortcut.Name + ".lnk");
+            if (System.IO.File.Exists(actShortcutPath))
+                System.IO.File.Delete(actShortcutPath);
         }
 
         public static void ExecuteShortcut(Shortcut shortcut) {
             ProcessStartInfo startInfo = new() {
-                FileName = GetPrimaryShortcutPath(shortcut),
+                FileName = GetShortcutPath(shortcut),
                 // start in user directory to show a 'pretty' path in the command prompt
-                WorkingDirectory = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile)
+                WorkingDirectory = System.Environment.GetFolderPath(System.Environment.SpecialFolder.UserProfile),
+                UseShellExecute = true
             };
             Process process = new() { StartInfo = startInfo };
             process.Start();

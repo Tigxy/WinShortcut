@@ -12,13 +12,28 @@ namespace win_short_cut {
         {
             InitializeComponent();
 
+            // for handling old versions
+            if (System.IO.Directory.Exists(Globals.ApplicationDirDeprecated)) {
+                if (System.IO.Directory.Exists(Globals.ApplicationDir))
+                    // this statement might never be reached, but let's still ensure that everything is cleaned up
+                    System.IO.Directory.Delete(Globals.ApplicationDirDeprecated);
+                else
+                    System.IO.Directory.Move(Globals.ApplicationDirDeprecated, Globals.ApplicationDir);
+            }
+
             // ensure that necessary directories exist
             System.IO.Directory.CreateDirectory(Globals.ApplicationDir);
-            System.IO.Directory.CreateDirectory(Globals.ShortcutBinPath);
+            System.IO.Directory.CreateDirectory(Globals.ShortcutBatPath);
+            System.IO.Directory.CreateDirectory(Globals.ShortcutPath);
 
-            // make shortcut files visible for command prompt
-            if (!Utils.Environment.IsInPath(Globals.ShortcutBinPath))
-                Utils.Environment.AddToPath(Globals.ShortcutBinPath);
+            // remove depricated shortcut path from the environment paths
+            string deprecatedShortcutPath = System.IO.Path.Combine(Globals.ApplicationDir, "bin");
+            if (Utils.Environment.IsInPath(deprecatedShortcutPath))
+                Utils.Environment.RemoveFromPath(deprecatedShortcutPath);
+
+            // make shortcut files visible in environment
+            if (!Utils.Environment.IsInPath(Globals.ShortcutPath))
+                Utils.Environment.AddToPath(Globals.ShortcutPath);
 
             LoadSettings();
             LoadShortcuts();

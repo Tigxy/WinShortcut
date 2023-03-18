@@ -137,6 +137,9 @@
                                         <CheckBox Grid.Column="0" Margin="0 0 0 0"
                                       IsChecked="{Binding KeepOpenOnceDone, UpdateSourceTrigger=PropertyChanged}" 
                                       Content="keep console open once done" VerticalContentAlignment="Center"/>
+                                        <CheckBox Grid.Column="0" Margin="0 0 0 0"
+                                      IsChecked="{Binding ExecuteMinimized, UpdateSourceTrigger=PropertyChanged}" 
+                                      Content="execute minimized" VerticalContentAlignment="Center"/>
                                         <CheckBox Grid.Column="1" Margin="0 0 0 0"
                                       IsChecked="{Binding ConcatenateCommands, UpdateSourceTrigger=PropertyChanged}" 
                                       Content="concatenate commands for execution" VerticalContentAlignment="Center">
