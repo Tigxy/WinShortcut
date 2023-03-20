@@ -111,7 +111,7 @@
             </ListView.View>
         </ListView>
 
-        <Button Grid.Row="2" Width="Auto" Height="Auto" HorizontalAlignment="Center" Content="add new" Padding="10 4" Margin="5" Click="btnAddNew_Click">
+        <Button Grid.Row="2" Width="Auto" Height="Auto" HorizontalAlignment="Center" Content="add new shortcut" Padding="10 4" Margin="5" Click="btnAddNew_Click">
             <Button.Resources>
                 <Style TargetType="Border">
                     <Setter Property="CornerRadius" Value="8"/>

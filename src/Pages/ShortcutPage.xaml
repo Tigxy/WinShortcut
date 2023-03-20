@@ -83,7 +83,7 @@
             <TextBox Grid.Row="1" Grid.Column="1" Text="{Binding Shortcut.Description, UpdateSourceTrigger=PropertyChanged}" Margin="0 5" Padding="2"/>
         </Grid>
 
-        <TextBlock Grid.Row="2" Text="parallel command blocks" Margin="0 5" FontSize="16" FontWeight="SemiBold"/>
+        <TextBlock Grid.Row="2" Text="parallel execution blocks" Margin="0 5" FontSize="16" FontWeight="SemiBold"/>
 
         <ListView x:Name="lv_Blocks" Grid.Row="3" ItemsSource="{Binding Shortcut.Containers}" ScrollViewer.CanContentScroll="False" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
             <ListView.ItemContainerStyle>
@@ -217,12 +217,19 @@
                                     </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
-                            <Button Grid.Row="5" Width="Auto" Height="Auto" HorizontalAlignment="Left" Content="add" Padding="10 4" Margin="5" Click="btnAddCommand_Click">
+                            <Button Grid.Row="5" Height="Auto" HorizontalAlignment="Left"
+                                    Padding="10 4" Margin="5" Click="btnAddCommand_Click"
+                                    Background="White">
                                 <Button.Resources>
                                     <Style TargetType="Border">
                                         <Setter Property="CornerRadius" Value="8"/>
                                     </Style>
                                 </Button.Resources>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock VerticalAlignment="Center">add</TextBlock>
+                                    <TextBlock VerticalAlignment="Center" Margin="3 0" FontFamily="Segoe MDL2 Assets">&#xECC8;</TextBlock>
+                                    <!--<TextBlock>&#xE710;</TextBlock>-->                                    
+                                </StackPanel>
                             </Button>
                         </StackPanel>
                     </Grid>

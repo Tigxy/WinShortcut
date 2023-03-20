@@ -10,7 +10,7 @@ namespace win_short_cut.DataClasses {
         public bool KeepOpenOnceDone { get; set; }
 
         [XmlAttribute]
-        public bool ExecuteMinimized { get; set; } = true;
+        public bool ExecuteMinimized { get; set; } = false;
 
         [XmlAttribute]
         public bool ConcatenateCommands { get; set; }

@@ -16,7 +16,7 @@ namespace win_short_cut {
             if (System.IO.Directory.Exists(Globals.ApplicationDirDeprecated)) {
                 if (System.IO.Directory.Exists(Globals.ApplicationDir))
                     // this statement might never be reached, but let's still ensure that everything is cleaned up
-                    System.IO.Directory.Delete(Globals.ApplicationDirDeprecated);
+                    System.IO.Directory.Delete(Globals.ApplicationDirDeprecated, true);
                 else
                     System.IO.Directory.Move(Globals.ApplicationDirDeprecated, Globals.ApplicationDir);
             }
