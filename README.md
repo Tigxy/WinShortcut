@@ -1,6 +1,7 @@
 # WinShortcut - your shortcut tool
 
 Application to define command shortcuts for Windows. This allows you to avoid the hassle of executing the same set of commands every single day. Simply use `⊞ Win + R` and type in the shortcut you have defined.
+
 ![App's shortcut overview](resources/overview.png)
 
 ---
@@ -15,6 +16,7 @@ The installer for this app is available at https://tigxy.github.io/WinShortcut/W
 ## Usage examples
 ### Example 1: Starting a jupyter notebook in some project's directory 
 Here is an simple example on how you can avoid the hassle of starting your jupyter notebook in a specific directory.
+
 ![Individual shortcut overview](resources/simple-example.png)
 
 ### Example 2: Setting up your work environment
