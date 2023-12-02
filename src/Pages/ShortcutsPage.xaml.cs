@@ -25,15 +25,25 @@ namespace win_short_cut.Pages {
 
         private void btnEdit_Click(object sender, RoutedEventArgs e) {
             if (sender is Button btn)
-                if (btn.DataContext is Shortcut shortcut)
-                    PageManager.Instance.SwitchToPage("edit", shortcut.DeepClone());
+                if (btn.DataContext is Shortcut shortcut) {
+                    if (shortcut.DeepCopy() is Shortcut shortcutCopy) {
+                        PageManager.Instance.SwitchToPage("edit", shortcutCopy);
+                    }
+                    else {
+                        System.Diagnostics.Debug.WriteLine("Error: could not duplicate shortcut for editing");
+                        return;
+                    }
+                }
         }
 
         private void btnDuplicate_Click(object sender, RoutedEventArgs e) {
             if (sender is Button btn)
                 if (btn.DataContext is Shortcut shortcut) {
-                    Shortcut newShortcut = shortcut.DeepClone();
-                    newShortcut.Id = Guid.NewGuid();
+                    var newShortcut = shortcut.DeepCopy(copyId: false);
+                    if (newShortcut == null) {
+                        System.Diagnostics.Debug.WriteLine("Error: could not duplicate shortcut");
+                        return;
+                    }
 
                     int i = 1;
                     string baseNameSuggestion = newShortcut.Name + "_copy";
