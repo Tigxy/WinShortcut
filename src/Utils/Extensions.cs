@@ -1,15 +1,16 @@
 ﻿using System.IO;
 using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
+using System.Xml.Serialization;
 
 namespace win_short_cut.Utils {
     public static class Extensions {
-        public static T DeepClone<T>(this T a) {
+        public static T? DeepClone<T>(this T a) {
             using (MemoryStream stream = new MemoryStream()) {
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(stream, a);
+                XmlSerializer xs = new XmlSerializer(typeof(T));
+                xs.Serialize(stream, a);
                 stream.Position = 0;
-                return (T)formatter.Deserialize(stream);
+
+                return (T?)xs.Deserialize(stream);
             }
         }
 
@@ -38,13 +39,15 @@ namespace win_short_cut.Utils {
 
         public static bool DeepEqual<T>(this T a, T b) {
             using (MemoryStream streamA = new MemoryStream()) {
-                BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(streamA, a);
+
+                XmlSerializer xsA = new XmlSerializer(typeof(T));
+                xsA.Serialize(streamA, a);
                 streamA.Position = 0;
 
                 using (MemoryStream streamB = new MemoryStream()) {
-                    BinaryFormatter formatterB = new BinaryFormatter();
-                    formatterB.Serialize(streamB, b);
+
+                    XmlSerializer xsB = new XmlSerializer(typeof(T));
+                    xsB.Serialize(streamB, b);
                     streamB.Position = 0;
 
                     return streamA.StreamEqual(streamB);
