@@ -23,6 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="gong-wpf-dragdrop" Version="3.2.1" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="PopUps\MessageBox_YesNo.xaml.cs">

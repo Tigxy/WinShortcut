@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
              xmlns:Extensions="clr-namespace:win_short_cut.Extensions"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800">
     <d:DesignerProperties.DesignStyle>
@@ -52,17 +53,26 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" FontFamily="Segoe MDL2 Assets" Content="&#xE76B;"
-                FontSize="20" Padding="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                HorizontalAlignment="Left" VerticalAlignment="Center" Background="Transparent" Click="btnBack_Click"
-                />
+            <Button Grid.Column="0" Click="btnBack_Click"
+                    Style="{StaticResource MaterialDesignRaisedButton}"
+                    ToolTip="Recreate all shortcuts">
+                <materialDesign:PackIcon 
+                    Width="{StaticResource ControlIconSize}"
+                    Height="{StaticResource ControlIconSize}"
+                    Kind="ArrowLeft"/>
+            </Button>
 
-            <TextBlock Grid.Column="1" Text="{Binding PageTitle}" Margin="5" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
+            <TextBlock Grid.Column="1" Text="{Binding PageTitle, FallbackValue=Edit shortcut}"  Margin="5" VerticalAlignment="Center"
+                    Style="{StaticResource MaterialDesignHeadline6TextBlock}"/>
 
-            <Button Grid.Column="2" FontFamily="Segoe MDL2 Assets" Content="&#xE74E;"
-                FontSize="20" Padding="3" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"
-                HorizontalAlignment="Left" VerticalAlignment="Center" Background="Transparent" Click="btnStore_Click"
-                />
+            <Button Grid.Column="2" Click="btnStore_Click"
+                    Style="{StaticResource MaterialDesignRaisedButton}"
+                    ToolTip="Recreate all shortcuts">
+                <materialDesign:PackIcon 
+                    Width="{StaticResource ControlIconSize}"
+                    Height="{StaticResource ControlIconSize}"
+                    Kind="ContentSaveOutline"/>
+            </Button>
         </Grid>
 
         <Grid Grid.Row="1">
